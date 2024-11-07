@@ -1,0 +1,176 @@
+body {
+    background-color: #f7efef;
+}
+
+/* Стили для модального окна */
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.modal-content input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background-color: #45a049;
+}
+
+/* Стили для интерфейса чата */
+
+#chat-container {
+    display: flex;
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.user-list {
+    width: 25%;
+    max-height: 300px; /* Максимальная высота, например, 300px */
+    overflow-y: auto; /* Прокрутка, если список слишком длинный */
+    border: 1px solid #4caf50;
+    border-right: none;
+    border-radius: 15px;
+    padding: 10px;
+    background-color: #f8effb;
+}
+#users {
+    list-style-type: none; /* Убираем стандартные точки */
+    padding: 0; /* Убираем отступы */
+}
+
+#users li {
+    position: relative;
+    padding-left: 25px; /* Отступ для круга слева от текста */
+    margin-bottom: 5px;
+}
+
+#users li::before {
+    content: ""; /* Создаем псевдоэлемент перед текстом */
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px; /* Ширина круга */
+    height: 15px; /* Высота круга */
+    border: 1px solid rgb(79, 90, 92); /* Толщина и цвет обводки круга */
+    border-radius: 50%; /* Делаем круг */
+    background-color: transparent; /* Прозрачный фон внутри */
+}
+
+.chat-box {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid #4caf50;
+    border-radius: 15px;
+    background-color: #f0e8f4;
+}
+
+.messages-container {
+    flex-grow: 1;
+    /*border: 1px solid #ccc;*/
+    padding: 10px;
+    overflow-y: scroll;
+    height: 400px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+#message-input {
+    /* width: calc(100% - 100px); */
+    min-width: 90%;
+    padding: 10px;
+    border: 1px solid #4caf50;
+    border-radius: 4px;
+}
+
+#send-message {
+    min-width: 90%;
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#send-message:hover {
+    background-color: #45a049;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: gray;
+}
+
+.current-user {
+    color: rgb(205, 92, 55); /* Используйте цвет по вашему выбору */
+    font-weight: bold;
+}
+
+.my-message {
+    background-color: #e0f7fa; /* Цвет фона для сообщений пользователя */
+    align-self: flex-end; /* Выравнивание по правой стороне */
+    padding: 8px;
+    border-radius: 10px;
+    max-width: 70%; /* Ограничение ширины сообщения */
+    margin: 5px 0;
+}
+
+.other-message {
+    background-color: #f1f1f1; /* Цвет фона для сообщений других пользователей */
+    align-self: flex-start; /* Выравнивание по левой стороне */
+    padding: 8px;
+    border-radius: 10px;
+    max-width: 70%;
+    margin: 5px 0;
+}
+
+.message-meta {
+    font-size: 0.8em;
+    color: gray;
+    margin-bottom: 2px;
+}
+
+.message-text {
+    font-size: 1em;
+}
