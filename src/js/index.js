@@ -1,5 +1,5 @@
 // Подключение к WebSocket серверу
-const ws = new WebSocket("ws://localhost:3000");
+const ws = new WebSocket("wss://websocketsserver.onrender.com");
 
 // Событие открытия соединения
 ws.onopen = () => {
@@ -39,13 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Функция проверки никнейма (из ранее написанного кода)
   async function checkNickname(name) {
     try {
-      const response = await fetch("http://localhost:3000/new-user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://websocketsserver.onrender.com/new-user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name }),
         },
-        body: JSON.stringify({ name }),
-      });
+      );
       const result = await response.json();
 
       if (result.status === "ok") {
@@ -70,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     chatContainer.style.display = "flex";
 
-    const ws = new WebSocket("ws://localhost:3000");
+    const ws = new WebSocket("wss://websocketsserver.onrender.com");
 
     ws.onopen = () => {
       ws.send(
