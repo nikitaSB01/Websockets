@@ -3,18 +3,18 @@ const ws = new WebSocket("ws://localhost:3000");
 
 // Событие открытия соединения
 ws.onopen = () => {
-  console.log("==>Connected to WebSocket server");
+  console.log("==> Connected to WebSocket server");
 };
 
 // Событие закрытия соединения
 ws.onclose = () => {
-  console.log("==>Disconnected from WebSocket server");
+  console.log("==> Disconnected from WebSocket server");
 };
 
 // Событие получения сообщения
 ws.onmessage = (event) => {
   const message = JSON.parse(event.data);
-  console.log("==>Received:", message);
+  console.log("==> Received:", message);
 };
 
 //? ......  Обработка клика кнопки и проверка никнейма .......
@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("nickname-modal");
   const nicknameInput = document.getElementById("nickname-input");
   const nicknameSubmit = document.getElementById("nickname-submit");
+  const clearHistoryButton = document.getElementById("clear-history"); // Кнопка для удаления истории
 
   // Обработчик нажатия на кнопку "Продолжить"
   nicknameSubmit.addEventListener("click", () => {
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
 
       if (result.status === "ok") {
-        console.log("==>Никнейм принят:", result.user.name);
+        console.log("==> Никнейм принят:", result.user.name);
         modal.style.display = "none"; // Скрыть модальное окно
         initializeChat(name); // Инициализация чата с никнеймом
       } else {
@@ -72,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const ws = new WebSocket("ws://localhost:3000");
 
     ws.onopen = () => {
-      console.log("Connected to WebSocket server");
       ws.send(
         JSON.stringify({
           type: "join",
@@ -92,6 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.user.name !== nickname) {
           displayMessage(data);
         }
+      } else if (data.type === "history") {
+        // Очистка и загрузка истории сообщений
+        messagesContainer.innerHTML = "";
+        data.data.forEach((msg) => displayMessage(msg));
       }
     };
 
@@ -126,6 +130,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Обработчик для кнопки отправки
     sendMessageButton.addEventListener("click", sendMessage);
+
+    // Обработчик для кнопки очистки истории
+    clearHistoryButton.addEventListener("click", () => {
+      ws.send(JSON.stringify({ type: "clear" }));
+      messagesContainer.innerHTML = ""; // Очистка сообщений на клиенте
+    });
 
     function displayMessage(data) {
       const messageElement = document.createElement("div");

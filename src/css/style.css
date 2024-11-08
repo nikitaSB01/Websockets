@@ -174,3 +174,18 @@ body {
 .message-text {
     font-size: 1em;
 }
+
+#clear-history {
+    min-width: 90%;
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #d31717;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#clear-history:hover {
+    background-color: #ab1010;
+}
