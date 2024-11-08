@@ -20,11 +20,10 @@ ws.onmessage = (event) => {
 //? ......  Обработка клика кнопки и проверка никнейма .......
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Показать модальное окно при загрузке страницы
   const modal = document.getElementById("nickname-modal");
   const nicknameInput = document.getElementById("nickname-input");
   const nicknameSubmit = document.getElementById("nickname-submit");
-  const clearHistoryButton = document.getElementById("clear-history"); // Кнопка для удаления истории
+  const clearHistoryButton = document.getElementById("clear-history");
 
   // Обработчик нажатия на кнопку "Продолжить"
   nicknameSubmit.addEventListener("click", () => {
@@ -36,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Функция проверки никнейма (из ранее написанного кода)
+  // Функция проверки никнейма
   async function checkNickname(name) {
     try {
       const response = await fetch(
@@ -75,6 +74,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const ws = new WebSocket("wss://websocketsserver.onrender.com");
 
+    // Таймер для отправки пинг-сообщений каждые 3 секунд
+    const pingInterval = setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: "ping", user: { name: nickname } }));
+      }
+    }, 3000);
+
     ws.onopen = () => {
       ws.send(
         JSON.stringify({
@@ -88,15 +94,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = JSON.parse(event.data);
 
       if (Array.isArray(data)) {
-        // Проверяем, есть ли лишние пользователи
-        const uniqueUsers = data.filter((user) => user.name !== ""); // Удаление пустых или тестовых значений
+        const uniqueUsers = data.filter((user) => user.name !== "");
         updateUserList(uniqueUsers);
       } else if (data.type === "send") {
         if (data.user.name !== nickname) {
           displayMessage(data);
         }
       } else if (data.type === "history") {
-        // Очистка и загрузка истории сообщений
         messagesContainer.innerHTML = "";
         data.data.forEach((msg) => displayMessage(msg));
       }
@@ -126,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Добавляем обработчик нажатия Enter на поле ввода
     messageInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
-        event.preventDefault(); // Предотвращаем перевод строки
+        event.preventDefault();
         sendMessage();
       }
     });
@@ -137,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Обработчик для кнопки очистки истории
     clearHistoryButton.addEventListener("click", () => {
       ws.send(JSON.stringify({ type: "clear" }));
-      messagesContainer.innerHTML = ""; // Очистка сообщений на клиенте
+      messagesContainer.innerHTML = "";
     });
 
     function displayMessage(data) {
@@ -163,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateUserList(users) {
-      usersContainer.innerHTML = ""; // Очистка списка пользователей
+      usersContainer.innerHTML = "";
       users.forEach((user) => {
         const userElement = document.createElement("li");
         userElement.textContent = user.name === nickname ? "You" : user.name;
@@ -183,6 +187,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }),
       );
       ws.close();
+      clearInterval(pingInterval); // Очищаем таймер при закрытии соединения
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        ws.send(JSON.stringify({ type: "exit", user: { name: nickname } }));
+        ws.close();
+      }
     });
   }
 });
